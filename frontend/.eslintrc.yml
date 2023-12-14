@@ -15,7 +15,7 @@ plugins:
   - react
   - functional
 rules:
-   import/extensions: 0
+  import/extensions: 0
   import/no-unresolved: 0
   react/prop-types: 0
   no-console: 0
@@ -30,3 +30,8 @@ rules:
   react/function-component-definition: [2, { 'namedComponents': 'arrow-function' }]
   testing-library/no-debug: 0
   react/jsx-filename-extension: [1, { 'extensions': ['.js', '.jsx'] }]
+  functional/no-expression-statements: 0
+  no-undef: 0
+  functional/no-return-void: off
+  functional/no-conditional-statements: off
+  arrow-body-style": off
