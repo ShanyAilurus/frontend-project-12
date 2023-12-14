@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import non from '../imgs/non.png';
 
 const NotFound = () => {
-  const { t } = useTranslation();// тут вставить про изменения языка
+  const { t } = useTranslation();
 
   return (
     <div className="text-center">

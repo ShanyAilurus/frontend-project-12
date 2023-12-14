@@ -1,12 +1,21 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, {
+  useRef, useEffect, useState, useContext,
+} from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import loginImg from '../imgs/login.jpeg';
 import { loginSchema } from '../schemas';
+import { AuthContext } from './AuthProvider';
 
 const Login = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  // const location = useLocation();
+  // const history = useHistory(); // Использовать useHistory для редиректа
+  const auth = useContext(AuthContext); // Получить контекст аутентификации
 
   const [authFailed, setAuthFailed] = useState(false);
   const inputRef = useRef();
@@ -26,12 +35,33 @@ const Login = () => {
       username: '',
       password: '',
     },
-    onSubmit: (values) => {
-      console.log(JSON.stringify(values, null, 2));
-      setAuthFailed(true);
-      formik.setSubmitting(false);
-    },
     validationSchema: loginSchema,
+    onSubmit: async ({ username, password }) => {
+      try {
+        const response = await axios.post('/api/v1/login', { username, password }); // Отправка данных на сервер для авторизации
+        // Перенаправление на страницу с чатом или другую страницу
+        if (response.status === 200) {
+          const { token } = response.data;
+          localStorage.setItem('token', token);
+          // Редирект на страницу с чатом
+          auth.logIn(token); // Используйте метод logIn из контекста аутентификации
+          navigate('/'); // Используем navigate для перенаправления
+        } else {
+          // Обработка других статусов, если это не 200
+          throw new Error('Ошибка авторизации');
+        }
+      } catch (error) {
+        formik.setSubmitting(false);
+        if (error.isAxiosError && error.response.status === 401) {
+          inputRef.current.select();
+          formik.errors.username = ' ';
+          formik.errors.password = 'Неверные имя пользователя или пароль';
+          setAuthFailed(true);
+          return;
+        }
+        throw error;
+      }
+    },
   });
 
   return (
@@ -49,7 +79,7 @@ const Login = () => {
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       name="username"
-                      autocomplete="username"
+                      autoComplete="username"
                       required
                       id="username"
                       placeholder={t('username')}
@@ -63,14 +93,14 @@ const Login = () => {
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       name="password"
-                      autocomplete="current-password"
+                      autoComplete="current-password"
                       required
                       placeholder={t('password')}
                       type="password"
                       id="password"
                       onChange={formik.handleChange}
                       value={formik.values.password}
-                      isInvalid={submissionFailed || formik.errors.password}
+                      isInvalid={authFailed || formik.errors.password}
                     />
                     <Form.Label htmlFor="password">{t('password')}</Form.Label>
                     <Form.Control.Feedback type="invalid">{t('submissionFailed')}</Form.Control.Feedback>
