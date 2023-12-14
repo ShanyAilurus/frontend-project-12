@@ -4,6 +4,7 @@ import NotFound from './NotFound';
 import Login from './Login';
 import Chat from './Chat';
 import AuthProvider from './AuthProvider';
+import Registration from './Registration';
 
 const App = () => (
   <div className="h-100">
@@ -17,6 +18,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Chat />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Registration />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

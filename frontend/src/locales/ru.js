@@ -11,5 +11,6 @@ export default {
     submissionFailed: 'Неверные имя пользователя или пароль',
     noAccountQM: 'Нет аккаунта? ',
     registration: 'Регистрация',
+    channels: 'Каналы',
   },
 };

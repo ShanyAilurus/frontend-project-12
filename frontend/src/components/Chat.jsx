@@ -1,25 +1,32 @@
-import React, { useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { AuthContext } from './AuthProvider';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import FetchData from './fetchData';
+import Channels from './Channels';
+import Messages from './Messages';
 
 const Chat = () => {
-  const navigate = useNavigate();
-  const auth = useContext(AuthContext);
+  // const navigate = useNavigate();
+  // const auth = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token || !auth.isAuthenticated) {
-      navigate('/login'); // Перенаправить на страницу входа при отсутствии токена
+    if (token) {
+      dispatch(FetchData(token));
     }
-  }, [navigate, auth]);
+  }, [dispatch, token]);
+
+  // использовать useSelector, чтобы получить данные о каналах и сообщениях из Redux-состояния
+  const channels = useSelector((state) => state.channels.channels);
+  const messages = useSelector((state) => state.messages.messages);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
-        <span>Chat Hexlet</span>
+        <Channels channels={channels} />
+        <Messages messages={messages} />
       </div>
     </div>
   );
 };
-
 export default Chat;
