@@ -1,19 +1,23 @@
 import { createSlice } from '@reduxjs/toolkit';
+// import fetchData from '../components/fetchData';
 
 const initialState = {
   channels: [],
+  channelId: 1,
 };
 
-const chatSlice = createSlice({
-  name: 'chat',
+const channelsSlice = createSlice({
+  name: 'channels',
   initialState,
   reducers: {
-    setChannels: (state, action) => {
-      // eslint-disable-next-line no-param-reassign
-      state.channels = action.payload;
+    setChannels: (state, { payload }) => {
+      state.channels = payload;
+    },
+    setChannelId(state, { payload }) {
+      state.channelId = payload;
     },
   },
 });
 
-export const { actions } = chatSlice;
-export default chatSlice.reducer;
+export const { actions } = channelsSlice;
+export default channelsSlice.reducer;

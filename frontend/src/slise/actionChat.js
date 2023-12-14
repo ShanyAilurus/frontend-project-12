@@ -1,5 +1,3 @@
-import { setChannels, setMessages } from './channelsSlice';
-
 const fetchChannelsAndMessages = (token) => async (dispatch) => {
   try {
     // Отправьте запрос на сервер, используя токен авторизации

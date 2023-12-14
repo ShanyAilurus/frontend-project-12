@@ -1,32 +1,40 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import React from 'react';
+import {
+  BrowserRouter, Routes, Route, useLocation, Navigate,
+} from 'react-router-dom';
+// import Reac, { useEffect, useState } from 'react';
 import NotFound from './NotFound';
 import Login from './Login';
 import Chat from './Chat';
-import AuthProvider from './AuthProvider';
+// import AuthProvider from './AuthProvider';
 import Registration from './Registration';
+import useAuth from '../locales/useAuth';
+// import rout from '../rout';
+
+const PrivateRoute = ({ children }) => {
+  const location = useLocation();
+  const auth = useAuth();
+
+  return (
+    auth.loggedIn ? children : <Navigate to="/login" state={{ from: location }} />
+  );
+};
 
 const App = () => (
-  <div className="h-100">
-    <div className="h-100" id="chat">
-      <div className="d-flex flex-column h-100">
-        <nav className="shadow-sm navbar navbar-expand-lg navbar-light bg-white">
-          <div className="container"><a className="navbar-brand" href="/">Hexlet Chat</a></div>
-        </nav>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Chat />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Registration />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </div>
-      <div className="Toastify" />
-    </div>
-  </div>
+  <BrowserRouter>
+    <Routes>
+      <Route
+        index
+        element={(
+          <PrivateRoute>
+            <Chat />
+          </PrivateRoute>
+          )}
+      />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Registration />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </BrowserRouter>
 );
 
 export default App;

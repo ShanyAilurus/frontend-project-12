@@ -1,23 +1,21 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-import FetchData from '../components/fetchData';
+// import fetchData from '../components/fetchData';
 
 const initialState = {
   messages: [],
 };
-
 const messageSlice = createSlice({
   name: 'message',
   initialState,
   reducers: {
-    setMessages(state, action) {
-      state.messages = action.payload;
+    setMessages(state, { payload }) {
+      state.messages = payload;
+    },
+    addMessage(state, { payload }) {
+      state.messages.push(payload);
     },
   },
-  extraReducers: (builder) => builder.addCase(FetchData.fulfilled, (state, action) => {
-    state.channels = action.payload.channels;
-    state.currentChannelId = action.payload.currentChannelId;
-  }),
 });
 
 export const { actions } = messageSlice;

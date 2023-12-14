@@ -6,8 +6,8 @@ import messagesReducer from './messagesSlice';
 export default configureStore({
   reducer: {
     // data: dataReducer,
-    channels: channelsReducer,
-    messages: messagesReducer,
+    channelsReducer,
+    messagesReducer,
     // Добавь другие редукторы по мере необходимости
   },
 });

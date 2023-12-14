@@ -1,30 +1,35 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import FetchData from './fetchData';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import Channels from './Channels';
 import Messages from './Messages';
+import routes from '../route';
+import { actions as channelsActions } from '../slise/channelsSlice';
 
 const Chat = () => {
-  // const navigate = useNavigate();
-  // const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const token = localStorage.getItem('token');
 
   useEffect(() => {
-    if (token) {
-      dispatch(FetchData(token));
-    }
-  }, [dispatch, token]);
+    const fetchData = async () => {
+      const response = await axios.get(routes.getData(), { headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` } });
+      dispatch(channelsActions.setChannels(response.data.channels));
+    };
+    fetchData();
+  }, [dispatch]);
 
-  // использовать useSelector, чтобы получить данные о каналах и сообщениях из Redux-состояния
-  const channels = useSelector((state) => state.channels.channels);
-  const messages = useSelector((state) => state.messages.messages);
+  useEffect(() => {
+    if (!localStorage.getItem('userInfo')) {
+      navigate('/login');
+    }
+  }, [navigate]);
 
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
-        <Channels channels={channels} />
-        <Messages messages={messages} />
+        {Channels()}
+        {Messages()}
       </div>
     </div>
   );

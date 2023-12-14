@@ -1,23 +1,39 @@
-import React, { createContext, useMemo, useState } from 'react';
+import React, {
+  useMemo, useState,
+} from 'react';
 
-export const AuthContext = createContext(null);
+// import useAuth from '../locales/useAuth';
+import AuthContext from '../locales/AuthContext';
 
 const AuthProvider = ({ children }) => {
-  const getToken = () => localStorage.getItem('token');
+  const getUser = () => JSON.parse(localStorage.getItem('user'));
 
-  const [isAuthenticated, setAuthenticated] = useState(Boolean(getToken()));
+  const [user, setUser] = useState(getUser());
 
-  const logIn = (token) => {
-    localStorage.setItem('token', token);
-    setAuthenticated(true);
+  const logIn = (userData) => {
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
   };
 
   const logOut = () => {
-    localStorage.removeItem('token');
-    setAuthenticated(false);
+    localStorage.removeItem('user');
+    setUser(null);
   };
 
-  const authValue = useMemo(() => ({ isAuthenticated, logIn, logOut }), [isAuthenticated]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const getAuthHeader = () => {
+    if (user && user.token) {
+      return { Authorization: `Bearer ${user.token}` };
+    }
+    return {};
+  };
+
+  const authValue = useMemo(() => ({
+    loggedIn: Boolean(user && user.token),
+    logIn,
+    logOut,
+    getAuthHeader,
+  }), [user, getAuthHeader]);
 
   return (
     <AuthContext.Provider value={authValue}>
