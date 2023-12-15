@@ -15,8 +15,12 @@ export default {
     messageNev: 'Новое сообщение',
     enterMessage: 'Введите сообщение...',
     addChannel: 'Добавить канал',
+    deleteChannel: 'Удалить канал',
     cancel: 'Отменить',
     send: 'Отправить',
+    delete: 'Удалить',
+    sure: 'Вы уверены?',
+    renameChannel: 'Переименовать канал',
     messagesCounter: {
       messages_Nol: '0 сообщений',
       messages_one: '{{count}} сообщение',

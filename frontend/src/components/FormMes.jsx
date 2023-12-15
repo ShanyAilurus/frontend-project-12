@@ -17,7 +17,7 @@ const FormMes = () => {
   useEffect(() => {
     // eslint-disable-next-line no-shadow
     socket.on('newMessage', (message) => {
-      dispatch(addMessage(message));
+      dispatch(message(message));
     });
     return () => {
       socket.off('newMessage');
@@ -34,7 +34,7 @@ const FormMes = () => {
     setMessage('');
   };
   return (
-    <form onSubmit={sendMessage} noValidate="" className="py-1 border rounded-2">
+    <form noValidate="" className="py-1 border rounded-2" onSubmit={sendMessage}>
       <div className="input-group has-validation">
         <input
           name="body"

@@ -6,6 +6,7 @@ import Channels from './Channels';
 import Messages from './Messages';
 import routes from '../route';
 import { actions as channelsActions } from '../slise/channelsSlice';
+import { actions as messagesActions } from '../slise/messagesSlice';
 
 const Chat = () => {
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ const Chat = () => {
     const fetchData = async () => {
       const response = await axios.get(routes.getData(), { headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` } });
       dispatch(channelsActions.setChannels(response.data.channels));
+      dispatch(messagesActions.setMessages(response.data.messages));
     };
     fetchData();
   }, [dispatch]);

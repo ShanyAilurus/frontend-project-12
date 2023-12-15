@@ -1,6 +1,5 @@
-/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
-// import fetchData from '../components/fetchData';
+import { actions as channelsActions } from './channelsSlice';
 
 const initialState = {
   messages: [],
@@ -15,6 +14,13 @@ const messageSlice = createSlice({
     addMessage(state, { payload }) {
       state.messages.push(payload);
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(channelsActions.removeChannel, (state, actions) => {
+      const channaelId = actions.payload.id;
+      const rest = state.messages.filter((i) => i.channelId !== channaelId);
+      state.messages = rest;
+    });
   },
 });
 

@@ -11,12 +11,11 @@ socket.on('newMessage', (payload) => {
 });
 
 const Messages = () => {
-  // const { t } = useTranslation();
-  const channels = useSelector((state) => state.chatReducer.channels);
-  const channelsId = useSelector((state) => state.chatReducer.channelId);
+  const channels = useSelector((state) => state.channelsReducer.channels);
+  const channelsId = useSelector((state) => state.channelsReducer.channelId);
   const messages = useSelector((state) => state.messageReducer.message);
 
-  const activChannelName = (channels1) => {
+  const activChannelId = (channels1) => {
     const filter = channels1.filter((channel) => channel.id === channelsId).map((i) => i.name);
     return filter[0];
   };
@@ -35,7 +34,9 @@ const Messages = () => {
     }
     return 'сообщений';
   };
-  const outputMessage = messages.map((mes) => {
+
+  const chennaMessage = messages.filter((mes) => mes.channelId === channelsId);
+  const outputMessage = chennaMessage.map((mes) => {
     const { body, username, id } = mes;
     return (
       <div className="text-break mb-2" key={id}>
@@ -54,14 +55,14 @@ const Messages = () => {
             <b>
               #
               {' '}
-              {activChannelName(channels)}
+              {activChannelId(channels)}
               {' '}
             </b>
           </p>
           <span className="text-muted">
-            {messages.length}
+            {chennaMessage.length}
             {' '}
-            {numberOfMessages((messages.length))}
+            {numberOfMessages((chennaMessage.length))}
           </span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5 ">
