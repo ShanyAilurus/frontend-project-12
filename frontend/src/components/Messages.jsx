@@ -1,7 +1,9 @@
+/* eslint-disable react/jsx-one-expression-per-line */
 import { useSelector } from 'react-redux';
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
-import { actions as messageActions } from '../slise/messagesSlice'; // Импортируем
+import { useTranslation } from 'react-i18next';
+import { actions as messageActions } from '../slise/messagesSlice';
 import slices from '../slise/index';
 import FormMes from './FormMes';
 
@@ -15,24 +17,25 @@ const Messages = () => {
   const channelsId = useSelector((state) => state.channelsReducer.channelId);
   const messages = useSelector((state) => state.messageReducer.message);
 
+  const { t } = useTranslation();
+
   const activChannelId = (channels1) => {
     const filter = channels1.filter((channel) => channel.id === channelsId).map((i) => i.name);
     return filter[0];
   };
-
   const numberOfMessages = (number) => {
     number %= 100;
     if (number >= 5 && number <= 20) {
-      return 'сообщений';
+      return t('messages_many');
     }
     number %= 10;
     if (number === 1) {
-      return 'сообщение';
+      return t('messages_one');
     }
     if (number >= 2 && number <= 4) {
-      return 'сообщения';
+      return t('messages_several');
     }
-    return 'сообщений';
+    return t(' messages_Nol');
   };
 
   const chennaMessage = messages.filter((mes) => mes.channelId === channelsId);
@@ -47,22 +50,20 @@ const Messages = () => {
     );
   });
 
+  const inputRef = useRef(null);
+  useEffect(() => {
+    inputRef.current.focus();
+  });
+
   return (
     <div className="col p-0 h-100">
       <div className="d-flex flex-column h-100">
         <div className="bg-light mb-4 p-3 shadow-sm small">
           <p className="m-0">
-            <b>
-              #
-              {' '}
-              {activChannelId(channels)}
-              {' '}
-            </b>
+            <b># {activChannelId(channels)} </b>
           </p>
           <span className="text-muted">
-            {chennaMessage.length}
-            {' '}
-            {numberOfMessages((chennaMessage.length))}
+            {chennaMessage.length} {numberOfMessages((chennaMessage.length))}
           </span>
         </div>
         <div id="messages-box" className="chat-messages overflow-auto px-5 ">
@@ -75,4 +76,5 @@ const Messages = () => {
     </div>
   );
 };
+
 export default Messages;

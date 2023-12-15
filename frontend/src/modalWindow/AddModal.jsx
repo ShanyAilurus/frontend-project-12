@@ -10,17 +10,14 @@ import * as yup from 'yup';
 import { useSelector } from 'react-redux';
 
 const socket = io();
-
 const AddChannelModal = ({ active, setActive }) => {
   const { t } = useTranslation();
-
   const channels = useSelector((state) => state.channelReduser.channels);
   const modalName = channels.map((i) => i.name);
-
   const addModalSchema = yup.object().shape({
     modalName: yup.string().trim().min(3).max(20)
       .required()
-      .notOneOf(modalName, 'Должно быть уникальным'),
+      .notOneOf(modalName, t('mustUnique')),
   });
 
   const {
@@ -85,4 +82,5 @@ const AddChannelModal = ({ active, setActive }) => {
     </Modal>
   );
 };
+
 export default AddChannelModal;

@@ -15,7 +15,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [authFailed] = useState(false);
   const { setToken } = useContext(AuthContext);
-
   const {
     values, errors, handleBlur, touched, handleChange, handleSubmit, setSubmitting,
   } = useFormik({
@@ -27,6 +26,7 @@ const Login = () => {
     validateOnChange: false,
     errorToken: false,
     onSubmit: () => {
+      // setAuthFailed(false);
       axios.post(routes.login(), { username: values.username, password: values.password })
         .then((response) => {
           const data = JSON.stringify(response.data);
@@ -38,14 +38,13 @@ const Login = () => {
         })
         .catch((err) => {
           if (err.response.status === 401) {
-            errors.password = 'Неверные имя пользователя или пароль';
+            errors.password = t('submissionFailed');
             return setSubmitting(false);
           }
           return setSubmitting(false);
         });
     },
   });
-
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
@@ -55,7 +54,6 @@ const Login = () => {
       inputRef.current.focus();
     }
   }, [authFailed]);
-
   const errClass = cn(
     'form-control',
     {
@@ -63,7 +61,6 @@ const Login = () => {
     (errors.password && touched.password) || (errors.username && touched.username),
     },
   );
-
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -75,46 +72,44 @@ const Login = () => {
               </div>
               <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={handleSubmit}>
                 <h1 className="text-center mb-4">{t('loginHeader')}</h1>
-                <fieldset disabled={formik.isSubmitting}>
-                  <Form.Group className="form-floating mb-3">
-                    <Form.Control
-                      name="username"
-                      autoComplete="username"
-                      required=""
-                      id="username"
-                      placeholder={t('username')}
-                      onChange={handleChange}
-                      value={values.username}
-                      ref={inputRef}
-                      onBlur={handleBlur}
-                      className={errClass}
-                    />
-                    <Form.Label htmlFor="username">{t('username')}</Form.Label>
-                  </Form.Group>
-                  <Form.Group className="form-floating mb-3">
-                    <Form.Control
-                      name="password"
-                      autoComplete="current-password"
-                      required=""
-                      placeholder={t('password')}
-                      type="password"
-                      id="password"
-                      onChange={handleChange}
-                      value={values.password}
-                      onBlur={handleBlur}
-                      className={errClass}
-                    />
-                    <Form.Label htmlFor="password">{t('password')}</Form.Label>
-                    <Form.Control.Feedback type="invalid">{authFailed && t('submissionFailed')}</Form.Control.Feedback>
-                  </Form.Group>
-                  <Button
-                    type="submit"
-                    variant="outline-primary"
-                    className="w-100 mb-3"
-                  >
-                    {t('loginHeader')}
-                  </Button>
-                </fieldset>
+                <Form.Group className="form-floating mb-3">
+                  <Form.Control
+                    name="username"
+                    autoComplete="username"
+                    required=""
+                    id="username"
+                    placeholder={t('yourNickname')}
+                    onChange={handleChange}
+                    value={values.username}
+                    ref={inputRef}
+                    onBlur={handleBlur}
+                    className={errClass}
+                  />
+                  <Form.Label htmlFor="username">{t('yourNickname')}</Form.Label>
+                </Form.Group>
+                <Form.Group className="form-floating mb-3">
+                  <Form.Control
+                    name="password"
+                    autoComplete="current-password"
+                    required=""
+                    placeholder={t('password')}
+                    type="password"
+                    id="password"
+                    onChange={handleChange}
+                    value={values.password}
+                    onBlur={handleBlur}
+                    className={errClass}
+                  />
+                  <Form.Label htmlFor="password">{t('password')}</Form.Label>
+                  <Form.Control.Feedback type="invalid">{authFailed && t('submissionFailed')}</Form.Control.Feedback>
+                </Form.Group>
+                <Button
+                  type="submit"
+                  variant="outline-primary"
+                  className="w-100 mb-3"
+                >
+                  {t('loginHeader')}
+                </Button>
               </Form>
             </div>
             <div className="card-footer p-4">

@@ -13,36 +13,29 @@ import RemoveChannel from '../modalWindow/RemoveChannel';
 import RenameChannel from '../modalWindow/RenameChannel';
 
 const socket = io();
-
 socket.on('addChannel', (payload) => {
   slices.dispatch(channelsActions.addChannel(payload));
   slices.dispatch(channelsActions.setChannelId(payload.id));
 });
-
 socket.on('removeChannel', (payload) => {
   slices.dispatch(channelsActions.removeChannel(payload));
   slices.dispatch(channelsActions.setChannelId(1));
 });
-
 socket.on('renameChannel', (payload) => {
   slices.dispatch(channelsActions.renameChannel(payload));
 });
-
 const Channels = () => {
   const { t } = useTranslation();
   const channels = useSelector((state) => state.channelReduser.channels);
   const channelIdActiv = useSelector((state) => state.channelReduser.channelId);
   const dispatch = useDispatch();
-
   const [addModalActive, setAddModalActive] = useState(false);
   const [deleteModalActive1, setDeleteModalActive1] = useState(false);
   const [renameModalActive, setRenameModalActive] = useState(false);
   const [channelId, setChannelId] = useState(null);
-
   const getChannelId = (id) => {
-    dispatch(chatActions.setChannelId(id)); // Используем  из actions
+    dispatch(chatActions.setChannelId(id));
   };
-
   const ModalWindowControl = channels.map((channel) => {
     const { name, id, removable } = channel;
     return (removable === false ? (
@@ -72,7 +65,6 @@ const Channels = () => {
             <span className="me-1">#</span>
             {name}
           </Button>
-
           <Dropdown.Toggle
             variant={id === channelIdActiv ? 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn btn-secondary' : 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn'}
             id="react-aria9457689434-1"
@@ -81,14 +73,13 @@ const Channels = () => {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1" onClick={() => { setDeleteModalActive1(true); setChannelId(id); }}>Удалить</Dropdown.Item>
-            <Dropdown.Item href="#/action-2" onClick={() => { setRenameModalActive(true); setChannelId(id); }}>Переименовать</Dropdown.Item>
+            <Dropdown.Item href="#/action-1" onClick={() => { setDeleteModalActive1(true); setChannelId(id); }}>{t('delete')}</Dropdown.Item>
+            <Dropdown.Item href="#/action-2" onClick={() => { setRenameModalActive(true); setChannelId(id); }}>{t('rename')}</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
       </li>
     ));
   });
-
   return (
     <>
       <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
@@ -100,7 +91,7 @@ const Channels = () => {
             onClick={() => setAddModalActive(true)}
           >
             <AddingChannel />
-            <span className="visually-hidden">+</span>
+            <span className="visually-hidden">{t('plus')}</span>
           </button>
         </div>
         <ul id="channels-box" className="nav flex-column nav-pills nav-fill px-2 mb-3 overflow-auto h-100 d-block">

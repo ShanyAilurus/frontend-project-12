@@ -6,19 +6,16 @@ import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import cn from 'classnames';
-import { addModalSchema } from '../schemas';
 
 const socket = io();
-
 const RenameChannel = ({ active, setActive, channelId }) => {
   const { t } = useTranslation();
   const channels = useSelector((state) => state.channelReduser.channels);
   const modalName = channels.map((i) => i.name);
-
   const addModalSchema = yup.object().shape({
     modalName: yup.string().trim().min(3).max(20)
       .required()
-      .notOneOf(modalName, 'Должно быть уникальным'),
+      .notOneOf(modalName, t('mustUnique')),
   });
 
   const {
@@ -36,16 +33,13 @@ const RenameChannel = ({ active, setActive, channelId }) => {
       values.modalName = '';
     },
   });
-
   const classError = cn('mb-2 form-control', {
     'mb-2 form-control is-invalid': errors.modalName,
   });
   const inputRef = useRef(null);
-
   const showModal = () => {
     inputRef.current.focus();
   };
-
   return (
     <Modal show={active} centered onShow={showModal}>
       <Modal.Header closeButton onClick={() => setActive(false)}>

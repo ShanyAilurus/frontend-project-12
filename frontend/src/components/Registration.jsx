@@ -10,7 +10,6 @@ import Registrat from '../imgs/registrate.jpg';
 const Registration = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-
   const {
     values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting,
   } = useFormik({
@@ -31,14 +30,13 @@ const Registration = () => {
         })
         .catch((err) => {
           if (err.response.status === 409) {
-            errors.username = 'Такой пользователь уже существует';
+            errors.username = t('userExists');
             return setSubmitting(false);
           }
           return setSubmitting(false);
         });
     },
   });
-
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -52,7 +50,7 @@ const Registration = () => {
                 <h1 className="text-center mb-4">{t('registration')}</h1>
                 <div className="form-floating mb-3">
                   <input
-                    placeholder="От 3 до 30 символов"
+                    placeholder={t('numberCharacters')}
                     name="username"
                     autoComplete="username"
                     required=""
@@ -62,12 +60,12 @@ const Registration = () => {
                     value={values.username}
                     onBlur={handleBlur}
                   />
-                  <label className="form-label" htmlFor="username">Имя пользователя</label>
-                  <div placement="right" className="invalid-tooltip">Обязательное поле</div>
+                  <label className="form-label" htmlFor="username">{t('userName')}</label>
+                  <div placement="right" className="invalid-tooltip">{t('obligatoryField')}</div>
                 </div>
                 <div className="form-floating mb-3">
                   <input
-                    placeholder="Не менее 6 символов"
+                    placeholder={t('moreCharacters')}
                     name="password"
                     aria-describedby="passwordHelpBlock"
                     required=""
@@ -79,12 +77,12 @@ const Registration = () => {
                     value={values.password}
                     onBlur={handleBlur}
                   />
-                  <div className="invalid-tooltip">Обязательное поле</div>
-                  <label className="form-label" htmlFor="password">Пароль</label>
+                  <div className="invalid-tooltip">{t('obligatoryField')}</div>
+                  <label className="form-label" htmlFor="password">{t('password')}</label>
                 </div>
                 <div className="form-floating mb-4">
                   <input
-                    placeholder="Пароли должны совпадать"
+                    placeholder={t('passwordsMustMatch')}
                     name="confirmPassword"
                     required=""
                     autoComplete="new-password"
@@ -100,14 +98,14 @@ const Registration = () => {
                     className="form-label"
                     htmlFor="confirmPassword"
                   >
-                    Подтвердите пароль
+                    {t('confirmPassword')}
                   </label>
                 </div>
                 <button
                   type="submit"
                   className="w-100 mb-3 btn btn-outline-primary btn-light"
                 >
-                  Зарегистрироваться
+                  {t('register')}
                 </button>
               </form>
             </div>
