@@ -3,15 +3,18 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const socket = io();
 
 const RemoveChannel = ({ active, setActive, channelId }) => {
   const { t } = useTranslation();
+  const notify = () => toast.success(t('channelDeleted'));
 
   const check = () => {
     socket.emit('removeChannel', { id: channelId });
     setActive(false);
+    notify();
   };
   return (
     <Modal show={active} centered>
@@ -40,5 +43,4 @@ const RemoveChannel = ({ active, setActive, channelId }) => {
     </Modal>
   );
 };
-
 export default RemoveChannel;

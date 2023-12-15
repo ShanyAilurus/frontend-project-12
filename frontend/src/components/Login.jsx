@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import loginImg from '../imgs/login.jpeg';
 import { loginSchema } from '../schemas';
 import AuthContext from '../contex/AuthContext';
@@ -13,6 +14,7 @@ import AuthContext from '../contex/AuthContext';
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const notify = () => toast.error(t('errorLoadingData'));
   const [authFailed] = useState(false);
   const { setToken } = useContext(AuthContext);
   const {
@@ -26,7 +28,6 @@ const Login = () => {
     validateOnChange: false,
     errorToken: false,
     onSubmit: () => {
-      // setAuthFailed(false);
       axios.post(routes.login(), { username: values.username, password: values.password })
         .then((response) => {
           const data = JSON.stringify(response.data);
@@ -34,9 +35,12 @@ const Login = () => {
           localStorage.setItem('userInfo', data);
           navigate('/');
           setToken(response.data);
-          console.log('Ghjdthznmmmm', data);
+          console.log('Arch Enemy the best!', data);
         })
         .catch((err) => {
+          if (err.message === 'Network Error') {
+            return notify();
+          }
           if (err.response.status === 401) {
             errors.password = t('submissionFailed');
             return setSubmitting(false);

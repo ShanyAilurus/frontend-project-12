@@ -1,15 +1,23 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { registrationSchema } from '../schemas';
 import Registrat from '../imgs/registrate.jpg';
 
 const Registration = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const notify = () => toast.error(t('errorLoadingData'));
+  const inputRef = useRef();
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
+
   const {
     values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting,
   } = useFormik({
@@ -29,7 +37,11 @@ const Registration = () => {
           navigate('/');
         })
         .catch((err) => {
+          if (err.message === 'Network Error') {
+            return notify();
+          }
           if (err.response.status === 409) {
+            inputRef.current.select();
             errors.username = t('userExists');
             return setSubmitting(false);
           }

@@ -5,6 +5,7 @@ import { Button } from 'react-bootstrap';
 import { io } from 'socket.io-client';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
+import filter from 'leo-profanity';
 import { actions as channelsActions } from '../slise/channelsSlice';
 import AddingChannel from './AddingChannel';
 import slices from '../slise/index';
@@ -29,6 +30,8 @@ const Channels = () => {
   const channels = useSelector((state) => state.channelReduser.channels);
   const channelIdActiv = useSelector((state) => state.channelReduser.channelId);
   const dispatch = useDispatch();
+  filter.loadDictionary('ru');
+
   const [addModalActive, setAddModalActive] = useState(false);
   const [deleteModalActive1, setDeleteModalActive1] = useState(false);
   const [renameModalActive, setRenameModalActive] = useState(false);
@@ -63,7 +66,7 @@ const Channels = () => {
             className="w-50"
           >
             <span className="me-1">#</span>
-            {name}
+            {filter.clean(name)}
           </Button>
           <Dropdown.Toggle
             variant={id === channelIdActiv ? 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn btn-secondary' : 'flex-grow-0 dropdown-toggle dropdown-toggle-split btn'}

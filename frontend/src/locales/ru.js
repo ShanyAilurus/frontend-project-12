@@ -42,5 +42,6 @@ export default {
     rename: 'Переименовать',
     moreCharacters: 'Не менее 6 символов',
     plus: '+',
+    errorLoadingData: 'Ошибка в загрузке данных',
   },
 };
