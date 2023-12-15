@@ -5,57 +5,64 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import loginImg from '../imgs/login.jpeg';
-import loginSchema from '../schemas';
-import useAuth from '../locales/useAuth';
-import rout from '../route';
+import { loginSchema } from '../schemas';
+import AuthContext from '../contex/AuthContext';
 
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const location = useLocation();
-  // const history = useHistory(); // Использовать useHistory для редиректа
-  const auth = useAuth(); // Получить контекст аутентификации
+  const [authFailed] = useState(false);
+  const { setToken } = useContext(AuthContext);
 
-  const [authFailed, setAuthFailed] = useState(false);
-
-  const formik = useFormik({
+  const {
+    values, errors, handleBlur, touched, handleChange, handleSubmit, setSubmitting,
+  } = useFormik({
     initialValues: {
       username: '',
       password: '',
     },
-    onSubmit: async (values) => {
-      setAuthFailed(false);
-      try {
-        const { data } = await axios.post(rout.loginPath(), values);
-        localStorage.setItem('user', JSON.stringify(data));
-        auth.logIn();
-        const { from } = location.state || { from: { pathname: '/' } };
-        navigate(from);
-      } catch (error) {
-        formik.setSubmitting(false);
-        if (error.isAxiosError && error.response.status === 401) {
-          setAuthFailed(true);
-          formik.setSubmitting(false);
-          return;
-        }
-        throw error;
-      }
-    },
     validationSchema: loginSchema,
+    validateOnChange: false,
+    errorToken: false,
+    onSubmit: () => {
+      axios.post(routes.login(), { username: values.username, password: values.password })
+        .then((response) => {
+          const data = JSON.stringify(response.data);
+          localStorage.clear();
+          localStorage.setItem('userInfo', data);
+          navigate('/');
+          setToken(response.data);
+          console.log('Ghjdthznmmmm', data);
+        })
+        .catch((err) => {
+          if (err.response.status === 401) {
+            errors.password = 'Неверные имя пользователя или пароль';
+            return setSubmitting(false);
+          }
+          return setSubmitting(false);
+        });
+    },
   });
 
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
   }, []);
-
   useEffect(() => {
     if (authFailed) {
       inputRef.current.focus();
     }
   }, [authFailed]);
+
+  const errClass = cn(
+    'form-control',
+    {
+      'form-control is-invalid':
+    (errors.password && touched.password) || (errors.username && touched.username),
+    },
+  );
 
   return (
     <div className="container-fluid h-100">
@@ -66,20 +73,21 @@ const Login = () => {
               <div className="col-12 col-md-6 d-flex align-items-center justify-content-center">
                 <img src={loginImg} className="rounded-circle" alt={t('loginHeader')} />
               </div>
-              <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={formik.handleSubmit}>
+              <Form className="col-12 col-md-6 mt-3 mt-mb-0" onSubmit={handleSubmit}>
                 <h1 className="text-center mb-4">{t('loginHeader')}</h1>
                 <fieldset disabled={formik.isSubmitting}>
                   <Form.Group className="form-floating mb-3">
                     <Form.Control
                       name="username"
                       autoComplete="username"
-                      required
+                      required=""
                       id="username"
                       placeholder={t('username')}
-                      onChange={formik.handleChange}
-                      value={formik.values.username}
-                      isInvalid={authFailed || formik.errors.username}
+                      onChange={handleChange}
+                      value={values.username}
                       ref={inputRef}
+                      onBlur={handleBlur}
+                      className={errClass}
                     />
                     <Form.Label htmlFor="username">{t('username')}</Form.Label>
                   </Form.Group>
@@ -87,13 +95,14 @@ const Login = () => {
                     <Form.Control
                       name="password"
                       autoComplete="current-password"
-                      required
+                      required=""
                       placeholder={t('password')}
                       type="password"
                       id="password"
-                      onChange={formik.handleChange}
-                      value={formik.values.password}
-                      isInvalid={authFailed || formik.errors.password}
+                      onChange={handleChange}
+                      value={values.password}
+                      onBlur={handleBlur}
+                      className={errClass}
                     />
                     <Form.Label htmlFor="password">{t('password')}</Form.Label>
                     <Form.Control.Feedback type="invalid">{authFailed && t('submissionFailed')}</Form.Control.Feedback>
@@ -120,5 +129,4 @@ const Login = () => {
     </div>
   );
 };
-
 export default Login;

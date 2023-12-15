@@ -3,14 +3,16 @@
 import React from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { registrationSchema } from '../schemas';
 import Registrat from '../imgs/registrate.jpg';
 
 const Registration = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const {
-    values, errors, touched, handleChange, handleSubmit,
+    values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting,
   } = useFormik({
     initialValues: {
       username: '',
@@ -20,11 +22,23 @@ const Registration = () => {
     validationSchema: registrationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: (values) => {
-      // eslint-disable-next-line no-alert
-      alert(JSON.stringify(values, null, 2));
+      axios.post('/api/v1/signup', { username: values.username, password: values.password })
+        .then((response) => {
+          const data = JSON.stringify(response.data);
+          localStorage.clear();
+          localStorage.setItem('userInfo', data);
+          navigate('/');
+        })
+        .catch((err) => {
+          if (err.response.status === 409) {
+            errors.username = 'Такой пользователь уже существует';
+            return setSubmitting(false);
+          }
+          return setSubmitting(false);
+        });
     },
   });
-  console.log('TOUCHED', touched.username);
+
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -38,14 +52,15 @@ const Registration = () => {
                 <h1 className="text-center mb-4">{t('registration')}</h1>
                 <div className="form-floating mb-3">
                   <input
-                    placeholder="От 3 до 20 символов"
+                    placeholder="От 3 до 30 символов"
                     name="username"
                     autoComplete="username"
                     required=""
                     id="username"
-                    className={errors.username ? 'form-control is-invalid' : 'form-control'}
+                    className={errors.username && touched.username ? 'form-control is-invalid' : 'form-control'}
                     onChange={handleChange}
                     value={values.username}
+                    onBlur={handleBlur}
                   />
                   <label className="form-label" htmlFor="username">Имя пользователя</label>
                   <div placement="right" className="invalid-tooltip">Обязательное поле</div>
@@ -59,9 +74,10 @@ const Registration = () => {
                     autoComplete="new-password"
                     type="password"
                     id="password"
-                    className={errors.password ? 'form-control is-invalid' : 'form-control'}
+                    className={errors.password && touched.password ? 'form-control is-invalid' : 'form-control'}
                     onChange={handleChange}
                     value={values.password}
+                    onBlur={handleBlur}
                   />
                   <div className="invalid-tooltip">Обязательное поле</div>
                   <label className="form-label" htmlFor="password">Пароль</label>
@@ -74,11 +90,12 @@ const Registration = () => {
                     autoComplete="new-password"
                     type="password"
                     id="confirmPassword"
-                    className={errors.confirmPassword ? 'form-control is-invalid' : 'form-control'}
+                    className={errors.confirmPassword && touched.confirmPassword ? 'form-control is-invalid' : 'form-control'}
                     onChange={handleChange}
                     value={values.confirmPassword}
+                    onBlur={handleBlur}
                   />
-                  <div className="invalid-tooltip" />
+                  <div className="invalid-tooltip">{errors.confirmPassword}</div>
                   <label
                     className="form-label"
                     htmlFor="confirmPassword"
@@ -88,7 +105,7 @@ const Registration = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-100 btn btn-outline-primary"
+                  className="w-100 mb-3 btn btn-outline-primary btn-light"
                 >
                   Зарегистрироваться
                 </button>
