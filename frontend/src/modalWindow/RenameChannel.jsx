@@ -7,11 +7,13 @@ import { useTranslation } from 'react-i18next';
 import { useFormik } from 'formik';
 import cn from 'classnames';
 import { toast } from 'react-toastify';
+import * as yup from 'yup';
+import { useSelector } from 'react-redux';
 
 const socket = io();
 const RenameChannel = ({ active, setActive, channelId }) => {
   const { t } = useTranslation();
-  const channels = useSelector((state) => state.channelReduser.channels);
+  const channels = useSelector((state) => state.channeslReduser.channels);
   const modalName = channels.map((i) => i.name);
   const notify = () => toast.success(t('channelRenamed'));
 
@@ -32,7 +34,7 @@ const RenameChannel = ({ active, setActive, channelId }) => {
     errorToken: false,
     onSubmit: () => {
       socket.emit('renameChannel', { id: channelId, name: values.modalName });
-      setActive(!active);
+      setActive(false);
       values.modalName = '';
       notify();
     },
@@ -45,8 +47,8 @@ const RenameChannel = ({ active, setActive, channelId }) => {
     inputRef.current.focus();
   };
   return (
-    <Modal show={active} centered onShow={showModal}>
-      <Modal.Header closeButton onClick={() => setActive(false)}>
+    <Modal show={active} centered onShow={showModal} onHide={() => setActive(false)}>
+      <Modal.Header closeButton>
         <Modal.Title>{t('renameChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>

@@ -5,6 +5,7 @@ import axios from 'axios';
 import Channels from './Channels';
 import Messages from './Messages';
 import routes from '../route';
+
 import { actions as channelsActions } from '../slise/channelsSlice';
 import { actions as messagesActions } from '../slise/messagesSlice';
 
@@ -14,24 +15,22 @@ const Chat = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(routes.getData(), { headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` } });
+      const response = await axios.get(routes.dataPath(), { headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` } });
       dispatch(channelsActions.setChannels(response.data.channels));
       dispatch(messagesActions.setMessages(response.data.messages));
     };
     fetchData();
   }, [dispatch]);
-
   useEffect(() => {
     if (!localStorage.getItem('userInfo')) {
       navigate('/login');
     }
   }, [navigate]);
-
   return (
     <div className="container h-100 my-4 overflow-hidden rounded shadow">
       <div className="row h-100 bg-white flex-md-row">
-        {Channels()}
-        {Messages()}
+        <Channels />
+        <Messages />
       </div>
     </div>
   );

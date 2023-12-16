@@ -1,24 +1,33 @@
-import React, {
-  useRef, useEffect, useState,
-} from 'react';
+import React, { useRef, useEffect, useContext } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import cn from 'classnames';
 import loginImg from '../imgs/login.jpeg';
 import { loginSchema } from '../schemas';
 import AuthContext from '../contex/AuthContext';
+import rout from '../route';
 
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const notify = () => toast.error(t('errorLoadingData'));
-  const [authFailed] = useState(false);
+
   const { setToken } = useContext(AuthContext);
+
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const btnRef = useRef(null);
+
+  useEffect(() => {
+    usernameRef.current.focus();
+  }, []);
+
   const {
-    values, errors, handleBlur, touched, handleChange, handleSubmit, setSubmitting,
+    values, errors, handleChange, handleSubmit, setSubmitting,
   } = useFormik({
     initialValues: {
       username: '',
@@ -28,14 +37,14 @@ const Login = () => {
     validateOnChange: false,
     errorToken: false,
     onSubmit: () => {
-      axios.post(routes.login(), { username: values.username, password: values.password })
+      axios.post(rout.logIn(), { username: values.username, password: values.password })
         .then((response) => {
           const data = JSON.stringify(response.data);
           localStorage.clear();
           localStorage.setItem('userInfo', data);
           navigate('/');
           setToken(response.data);
-          console.log('Arch Enemy the best!', data);
+          console.log('Ghjdthznmmmm', data);
         })
         .catch((err) => {
           if (err.message === 'Network Error') {
@@ -49,22 +58,15 @@ const Login = () => {
         });
     },
   });
-  const inputRef = useRef();
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-  useEffect(() => {
-    if (authFailed) {
-      inputRef.current.focus();
-    }
-  }, [authFailed]);
+
   const errClass = cn(
     'form-control',
     {
       'form-control is-invalid':
-    (errors.password && touched.password) || (errors.username && touched.username),
+      (errors.password) || (errors.username),
     },
   );
+
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">
@@ -85,8 +87,7 @@ const Login = () => {
                     placeholder={t('yourNickname')}
                     onChange={handleChange}
                     value={values.username}
-                    ref={inputRef}
-                    onBlur={handleBlur}
+                    ref={usernameRef}
                     className={errClass}
                   />
                   <Form.Label htmlFor="username">{t('yourNickname')}</Form.Label>
@@ -101,14 +102,15 @@ const Login = () => {
                     id="password"
                     onChange={handleChange}
                     value={values.password}
-                    onBlur={handleBlur}
                     className={errClass}
+                    ref={passwordRef}
                   />
                   <Form.Label htmlFor="password">{t('password')}</Form.Label>
-                  <Form.Control.Feedback type="invalid">{authFailed && t('submissionFailed')}</Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">{t('submissionFailed')}</Form.Control.Feedback>
                 </Form.Group>
                 <Button
                   type="submit"
+                  ref={btnRef}
                   variant="outline-primary"
                   className="w-100 mb-3"
                 >
@@ -128,4 +130,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

@@ -1,24 +1,26 @@
 import { useTranslation } from 'react-i18next';
-import { useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { io } from 'socket.io-client';
+
+const socket = io();
 
 const FormMes = () => {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const [message, setMessage] = useState('');
-  const channelsId = useSelector((state) => state.chatReducer.channelId);
+  const channelsId = useSelector((state) => state.channelsReducer.channelId);
 
   const inputRef = useRef();
   useEffect(() => {
     inputRef.current.focus();
   }, []);
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    // eslint-disable-next-line no-shadow
-    socket.on('newMessage', (message) => {
-      dispatch(message(message));
+    socket.on('newMessage', (newMessage) => {
+      dispatch(messageActions.addMessage(newMessage));
     });
+
     return () => {
       socket.off('newMessage');
     };
@@ -44,11 +46,12 @@ const FormMes = () => {
           className="border-0 p-0 ps-2 form-control"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          ref={inputRef}
         />
         <button
           type="submit"
           className="btn btn-group-vertical"
-          disabled=""
+          disabled={message.trim() === ''}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

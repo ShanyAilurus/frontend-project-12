@@ -1,21 +1,21 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import { useSelector } from 'react-redux';
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { io } from 'socket.io-client';
 import { useTranslation } from 'react-i18next';
-import { actions as messageActions } from '../slise/messagesSlice';
+import { actions as messagesActions } from '../slise/messagesSlice';
 import slices from '../slise/index';
 import FormMes from './FormMes';
 
 const socket = io();
 socket.on('newMessage', (payload) => {
-  slices.dispatch(messageActions.addMessage(payload));
+  slices.dispatch(messagesActions.addMessage(payload));
 });
 
 const Messages = () => {
   const channels = useSelector((state) => state.channelsReducer.channels);
   const channelsId = useSelector((state) => state.channelsReducer.channelId);
-  const messages = useSelector((state) => state.messageReducer.message);
+  const messages = useSelector((state) => state.messagesActions.message);
 
   const { t } = useTranslation();
 
@@ -26,16 +26,16 @@ const Messages = () => {
   const numberOfMessages = (number) => {
     number %= 100;
     if (number >= 5 && number <= 20) {
-      return t('messages_many');
+      return t('messagesCounter.messages_many');
     }
     number %= 10;
     if (number === 1) {
-      return t('messages_one');
+      return t('messagesCounter.messages_one');
     }
     if (number >= 2 && number <= 4) {
-      return t('messages_several');
+      return t('messagesCounter.messages_several');
     }
-    return t(' messages_Nol');
+    return t('messagesCounter.messages_Nol');
   };
 
   const chennaMessage = messages.filter((mes) => mes.channelId === channelsId);
@@ -48,11 +48,6 @@ const Messages = () => {
         {body}
       </div>
     );
-  });
-
-  const inputRef = useRef(null);
-  useEffect(() => {
-    inputRef.current.focus();
   });
 
   return (

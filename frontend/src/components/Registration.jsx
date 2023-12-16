@@ -5,17 +5,28 @@ import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { registrationSchema } from '../schemas';
+import * as yup from 'yup';
+import axios from 'axios';
 import Registrat from '../imgs/registrate.jpg';
 
 const Registration = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const notify = () => toast.error(t('errorLoadingData'));
-  const inputRef = useRef();
+  const registrationSchema = yup.object().shape({
+    username: yup.string().trim().min(3).max(20)
+      .required(),
+    password: yup.string().trim().min(6).max(30)
+      .required(),
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], t('passwordsMustMatch')).required(),
+  });
+  const usernameRef = useRef(null);
+  const passwordRef = useRef(null);
+  const confirmPasswordRef = useRef(null);
+  const btnRef = useRef(null);
 
   useEffect(() => {
-    inputRef.current.focus();
+    usernameRef.current.focus();
   }, []);
 
   const {
@@ -71,6 +82,7 @@ const Registration = () => {
                     onChange={handleChange}
                     value={values.username}
                     onBlur={handleBlur}
+                    ref={usernameRef}
                   />
                   <label className="form-label" htmlFor="username">{t('userName')}</label>
                   <div placement="right" className="invalid-tooltip">{t('obligatoryField')}</div>
@@ -88,6 +100,7 @@ const Registration = () => {
                     onChange={handleChange}
                     value={values.password}
                     onBlur={handleBlur}
+                    ref={passwordRef}
                   />
                   <div className="invalid-tooltip">{t('obligatoryField')}</div>
                   <label className="form-label" htmlFor="password">{t('password')}</label>
@@ -104,6 +117,7 @@ const Registration = () => {
                     onChange={handleChange}
                     value={values.confirmPassword}
                     onBlur={handleBlur}
+                    ref={confirmPasswordRef}
                   />
                   <div className="invalid-tooltip">{errors.confirmPassword}</div>
                   <label
@@ -116,6 +130,7 @@ const Registration = () => {
                 <button
                   type="submit"
                   className="w-100 mb-3 btn btn-outline-primary btn-light"
+                  ref={btnRef}
                 >
                   {t('register')}
                 </button>

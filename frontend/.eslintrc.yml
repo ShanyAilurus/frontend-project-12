@@ -35,3 +35,4 @@ rules:
   functional/no-conditional-statements: off
   arrow-body-style": off
   no-param-reassign: 0
+  import/no-extraneous-dependencies: 0

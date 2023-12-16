@@ -8,6 +8,5 @@ export default configureStore({
     channelsReducer,
     messagesReducer,
     modalsReducer,
-    // Добавь другие редукторы по мере необходимости
   },
 });

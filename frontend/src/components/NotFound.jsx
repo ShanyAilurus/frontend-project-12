@@ -1,10 +1,9 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-
 import non from '../imgs/non.png';
 
 const NotFound = () => {
   const { t } = useTranslation();
-
   return (
     <div className="text-center">
       <img alt={t('notFound')} className="img-fluid h-25" src={non} />

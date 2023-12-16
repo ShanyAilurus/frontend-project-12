@@ -4,8 +4,8 @@ import { actions as channelsActions } from './channelsSlice';
 const initialState = {
   messages: [],
 };
-const messageSlice = createSlice({
-  name: 'message',
+const messagesSlice = createSlice({
+  name: 'messages',
   initialState,
   reducers: {
     setMessages(state, { payload }) {
@@ -17,12 +17,12 @@ const messageSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(channelsActions.removeChannel, (state, actions) => {
-      const channaelId = actions.payload.id;
-      const rest = state.messages.filter((i) => i.channelId !== channaelId);
+      const channelId = actions.payload.id;
+      const rest = state.messages.filter((i) => i.channelId !== channelId);
       state.messages = rest;
     });
   },
 });
 
-export const { actions } = messageSlice;
-export default messageSlice.reducer;
+export const { actions } = messagesSlice;
+export default messagesSlice.reducer;

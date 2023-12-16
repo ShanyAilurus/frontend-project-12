@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'react-bootstrap';
@@ -25,19 +25,21 @@ socket.on('removeChannel', (payload) => {
 socket.on('renameChannel', (payload) => {
   slices.dispatch(channelsActions.renameChannel(payload));
 });
+
 const Channels = () => {
-  const { t } = useTranslation();
-  const channels = useSelector((state) => state.channelReduser.channels);
-  const channelIdActiv = useSelector((state) => state.channelReduser.channelId);
-  const dispatch = useDispatch();
   filter.loadDictionary('ru');
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const channels = useSelector((state) => state.channelsReducer.channels);
+  const channelIdActiv = useSelector((state) => state.channelsReducer.channelId);
 
   const [addModalActive, setAddModalActive] = useState(false);
   const [deleteModalActive1, setDeleteModalActive1] = useState(false);
   const [renameModalActive, setRenameModalActive] = useState(false);
   const [channelId, setChannelId] = useState(null);
+
   const getChannelId = (id) => {
-    dispatch(chatActions.setChannelId(id));
+    dispatch(channelsActions.setChannelId(id));
   };
   const ModalWindowControl = channels.map((channel) => {
     const { name, id, removable } = channel;
@@ -85,8 +87,8 @@ const Channels = () => {
   });
   return (
     <>
-      <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light">
-        <div className="d-flex justify-content-between mb-2 ps-4 pe-2">
+      <div className="col-4 col-md-2 border-end pt-5 px-0 bg-light flex-column h-100 d-flex">
+        <div className="d-flex justify-content-between mb-2 ps-4 pe-2 p-4">
           <span>{t('channels')}</span>
           <button
             type="button"
