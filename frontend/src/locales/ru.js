@@ -24,7 +24,7 @@ export default {
     messagesCounter: {
       messages_Nol: ' сообщений',
       messages_one: ' сообщение',
-      messages_several: ' сообщения',
+      messages_few: ' сообщения',
       messages_many: ' сообщений',
     },
     userName: 'Имя пользователя',
@@ -43,5 +43,11 @@ export default {
     moreCharacters: 'Не менее 6 символов',
     plus: '+',
     errorLoadingData: 'Ошибка в загрузке данных',
+    channelManagement: 'Управление каналом',
+    channelName: 'Имя канала',
+    noChannel: 'канал не найден',
+    networkError: 'Ошибка сети',
+    alreadyExists: 'Такой пользователь уже существует',
+    serverError: 'ошибка сервера',
   },
 };

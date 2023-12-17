@@ -1,36 +1,43 @@
-/* eslint-disable react/no-unknown-property */
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import React, { useEffect, useRef } from 'react';
 import { useFormik } from 'formik';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup';
 import axios from 'axios';
+import { Form, Button } from 'react-bootstrap';
 import Registrat from '../imgs/registrate.jpg';
+import rout from '../route';
+import useAuth from '../hooks/useAuth';
 
 const Registration = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const notify = () => toast.error(t('errorLoadingData'));
+  const auth = useAuth();
+
+  const notifyNetwork = () => toast.error(t('errorLoadingData'));
+  const notifyServer = () => toast.error(t('serverError'));
+
   const registrationSchema = yup.object().shape({
-    username: yup.string().trim().min(3).max(20)
-      .required(),
-    password: yup.string().trim().min(6).max(30)
-      .required(),
-    confirmPassword: yup.string().oneOf([yup.ref('password'), null], t('passwordsMustMatch')).required(),
+    username: yup.string().trim()
+      .min(3, t('numberCharacters'))
+      .max(20, t('numberCharacters'))
+      .required(t('obligatoryField')),
+    password: yup.string().trim()
+      .min(6, t('moreCharacters'))
+      .required(t('obligatoryField')),
+    confirmPassword: yup.string()
+      .oneOf([yup.ref('password'), null], t('passwordsMustMatch'))
+      .required(t('obligatoryField')),
   });
+
   const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
-  const confirmPasswordRef = useRef(null);
-  const btnRef = useRef(null);
 
   useEffect(() => {
     usernameRef.current.focus();
   }, []);
 
   const {
-    values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting,
+    values, errors, touched, handleChange, handleSubmit, handleBlur, setSubmitting, isSubmitting,
   } = useFormik({
     initialValues: {
       username: '',
@@ -40,23 +47,26 @@ const Registration = () => {
     validationSchema: registrationSchema,
     // eslint-disable-next-line no-shadow
     onSubmit: (values) => {
-      axios.post('/api/v1/signup', { username: values.username, password: values.password })
+      setSubmitting(true);
+      axios.post(rout.creatNewUser(), { username: values.username, password: values.password })
         .then((response) => {
-          const data = JSON.stringify(response.data);
-          localStorage.clear();
-          localStorage.setItem('userInfo', data);
-          navigate('/');
+          auth.logIn(response);
         })
         .catch((err) => {
           if (err.message === 'Network Error') {
-            return notify();
+            return notifyNetwork();
           }
           if (err.response.status === 409) {
-            inputRef.current.select();
-            errors.username = t('userExists');
+            errors.username = t('alreadyExists');
             return setSubmitting(false);
           }
+          if (err.response.status === 500) {
+            return notifyServer();
+          }
           return setSubmitting(false);
+        })
+        .finally(() => {
+          setSubmitting(false);
         });
     },
   });
@@ -72,7 +82,7 @@ const Registration = () => {
               <form onSubmit={handleSubmit} className="w-50">
                 <h1 className="text-center mb-4">{t('registration')}</h1>
                 <div className="form-floating mb-3">
-                  <input
+                  <Form.Control
                     placeholder={t('numberCharacters')}
                     name="username"
                     autoComplete="username"
@@ -85,10 +95,10 @@ const Registration = () => {
                     ref={usernameRef}
                   />
                   <label className="form-label" htmlFor="username">{t('userName')}</label>
-                  <div placement="right" className="invalid-tooltip">{t('obligatoryField')}</div>
+                  <div className="invalid-tooltip">{errors.username}</div>
                 </div>
                 <div className="form-floating mb-3">
-                  <input
+                  <Form.Control
                     placeholder={t('moreCharacters')}
                     name="password"
                     aria-describedby="passwordHelpBlock"
@@ -100,40 +110,39 @@ const Registration = () => {
                     onChange={handleChange}
                     value={values.password}
                     onBlur={handleBlur}
-                    ref={passwordRef}
                   />
-                  <div className="invalid-tooltip">{t('obligatoryField')}</div>
+                  <div className="invalid-tooltip">{errors.password}</div>
                   <label className="form-label" htmlFor="password">{t('password')}</label>
                 </div>
                 <div className="form-floating mb-4">
-                  <input
+                  <Form.Control
                     placeholder={t('passwordsMustMatch')}
                     name="confirmPassword"
-                    required=""
                     autoComplete="new-password"
+                    required=""
                     type="password"
                     id="confirmPassword"
                     className={errors.confirmPassword && touched.confirmPassword ? 'form-control is-invalid' : 'form-control'}
                     onChange={handleChange}
                     value={values.confirmPassword}
                     onBlur={handleBlur}
-                    ref={confirmPasswordRef}
+                    disabled={isSubmitting}
                   />
                   <div className="invalid-tooltip">{errors.confirmPassword}</div>
-                  <label
+                  <Form.Label
                     className="form-label"
                     htmlFor="confirmPassword"
                   >
                     {t('confirmPassword')}
-                  </label>
+                  </Form.Label>
                 </div>
-                <button
+                <Button
                   type="submit"
                   className="w-100 mb-3 btn btn-outline-primary btn-light"
-                  ref={btnRef}
+                  onClick={handleSubmit}
                 >
                   {t('register')}
-                </button>
+                </Button>
               </form>
             </div>
           </div>

@@ -1,30 +1,57 @@
-// import i18next from 'i18next';
-// import { I18nextProvider, initReactI18next } from 'react-i18next';
-// import { Provider as StoreProvider } from 'react-redux';
-// import App from './components/App';
-// import resources from './locales';
-// import AuthProvider from './contex/AuthProvider';
-// import store from './slise';
-// import SocketProvider from './contex/SocketProvider';
+import i18next from 'i18next';
+import React from 'react';
+import { io } from 'socket.io-client';
+import filterWords from 'leo-profanity';
+import { BrowserRouter } from 'react-router-dom';
+import { initReactI18next } from 'react-i18next';
+import { Provider as RollbarProvider } from '@rollbar/react';
+import App from './components/App';
+import resources from './locales';
+import SocketProvider from './context/SocketProvider';
+import rollbarConfig from './rollbarConfig';
+import { actions as channelsActions } from './slice/channelsSlice';
+import { actions as messagesActions } from './slice/messagesSlice';
+import slice from './slice/index';
 
-// const init = async () => {
-//   const i18n = i18next.createInstance();
-//   await i18n
-//     .use(initReactI18next)
-//     .init({
-//       resources,
-//       fallbackLng: 'ru',
-//     });
-//   return (
-//     <StoreProvider store={store}>
-//       <SocketProvider>
-//         <AuthProvider>
-//           <I18nextProvider i18n={i18n}>
-//             <App />
-//           </I18nextProvider>
-//         </AuthProvider>
-//       </SocketProvider>
-//     </StoreProvider>
-//   );
-// };
-// export default init;
+const init = async () => {
+  i18next
+    .use(initReactI18next)
+    .init({
+      resources,
+      fallbackLng: 'ru',
+    });
+
+  filterWords.add(filterWords.getDictionary('ru'));
+
+  const socket = io();
+
+  socket.on('newChannel', (payload) => {
+    slice.dispatch(channelsActions.addChannel(payload));
+  });
+
+  socket.on('removeChannel', (payload) => {
+    slice.dispatch(channelsActions.removeChannel(payload));
+  });
+
+  socket.on('renameChannel', (payload) => {
+    slice.dispatch(channelsActions.renameChannel(payload));
+  });
+
+  socket.on('newMessage', (payload) => {
+    slice.dispatch(messagesActions.addMessage(payload));
+  });
+
+  return (
+    <React.StrictMode>
+      <BrowserRouter>
+        <RollbarProvider config={rollbarConfig}>
+          <SocketProvider socket={socket}>
+            <App />
+          </SocketProvider>
+        </RollbarProvider>
+      </BrowserRouter>
+    </React.StrictMode>
+  );
+};
+
+export default init;

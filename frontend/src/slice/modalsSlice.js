@@ -1,9 +1,9 @@
+/* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   channelId: 1,
-  type: null,
-  item: null,
+  setModalInfo: { type: null, item: null },
 };
 
 const modalsSlice = createSlice({
@@ -12,12 +12,12 @@ const modalsSlice = createSlice({
   reducers: {
     openModal(state, { payload }) {
       const { type, item } = payload;
-      state.type = type;
-      state.item = item;
+      state.setModalInfo.type = type;
+      state.setModalInfo.item = item;
     },
     closeModal(state) {
-      state.type = null;
-      state.item = null;
+      state.setModalInfo.type = null;
+      state.setModalInfo.item = null;
     },
   },
 });

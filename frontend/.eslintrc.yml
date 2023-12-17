@@ -20,6 +20,7 @@ rules:
   no-console: 0
   react/react-in-jsx-scope: 0
   functional/no-conditional-statement: 0
+  functional/no-conditional-statements: 0
   functional/no-expression-statement: 0
   functional/immutable-data: 0
   functional/functional-parameters: 0
@@ -30,9 +31,3 @@ rules:
   testing-library/no-debug: 0
   react/jsx-filename-extension: [1, { 'extensions': ['.js', '.jsx'] }]
   functional/no-expression-statements: 0
-  no-undef: 0
-  functional/no-return-void: off
-  functional/no-conditional-statements: off
-  arrow-body-style": off
-  no-param-reassign: 0
-  import/no-extraneous-dependencies: 0
