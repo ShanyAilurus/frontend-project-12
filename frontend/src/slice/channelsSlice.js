@@ -5,6 +5,7 @@ const initialState = {
   channels: [],
   channelId: 1,
 };
+
 const channelsSlice = createSlice({
   name: 'channels',
   initialState,

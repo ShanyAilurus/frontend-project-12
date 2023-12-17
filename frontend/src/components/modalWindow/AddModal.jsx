@@ -19,7 +19,6 @@ const AddChannelModal = () => {
   const dispatch = useDispatch();
   const onHide = () => dispatch(modalsActions.closeModal());
   const { t } = useTranslation();
-
   const channels = useSelector((state) => state.channelsReducer.channels);
   const channelName = channels ? channels.map((i) => i.name) : [];
   const notify = () => toast.success(t('channelCreated'));

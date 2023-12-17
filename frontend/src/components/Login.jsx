@@ -17,13 +17,11 @@ import useAuth from '../hooks/useAuth';
 const Login = () => {
   const { t } = useTranslation();
   const auth = useAuth();
-
   const notifyNetwork = () => toast.error(t('errorLoadingData'));
   const notifyServer = () => toast.error(t('serverError'));
   const [error, setError] = useState('');
-
-  // фокус
   const usernameRef = useRef(null);
+
   useEffect(() => {
     usernameRef.current.focus();
   }, []);
@@ -58,10 +56,11 @@ const Login = () => {
           setSubmitting(false);
         })
         .finally(() => {
-          setSubmitting(true); // сброс isLoading в false после завершения запроса
+          setSubmitting(true);
         });
     },
   });
+
   const errClass = cn(
     'form-control',
     {
@@ -131,4 +130,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

@@ -61,6 +61,7 @@ const RenameChannel = () => {
   const classError = cn('mb-2 form-control', {
     'mb-2 form-control is-invalid': errors.channelName,
   });
+
   const inputRef = useRef(null);
 
   const showModal = () => {

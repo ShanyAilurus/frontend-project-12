@@ -17,7 +17,7 @@ const RemoveChannel = () => {
   const dispatch = useDispatch();
   const onHide = () => dispatch(modalsActions.closeModal());
   const modalInfo = useSelector((state) => state.modalsReducer.setModalInfo);
-  const channelId = modalInfo.item;
+  const channelId = modalInfo.targetId;
 
   const {
     handleSubmit, setSubmitting, isSubmitting,

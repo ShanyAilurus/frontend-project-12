@@ -11,10 +11,8 @@ const Messages = () => {
   const channelsId = useSelector((state) => state.channelsReducer.channelId);
   const messages = useSelector((state) => state.messagesReducer.messages) || [];
   const [message, setMessage] = useState('');
-
   const { t } = useTranslation();
   const socketChat = useSocket();
-
   const activeChannelId = (channels1) => {
     const filter = channels1.find((channel) => channel.id === channelsId);
     return filter ? filter.name : t('noChannel');
@@ -35,6 +33,7 @@ const Messages = () => {
         console.log('ERROR', error);
       });
   };
+
   const chennalMessage = messages.filter((mes) => mes.channelId === channelsId);
 
   const outputMessage = chennalMessage.map((mes) => {

@@ -10,14 +10,12 @@ import Chat from './Chat';
 import Registration from './Registration';
 import AuthNavbar from './Navbar';
 import Modal from './Modal';
-
 import useAuth from '../hooks/useAuth';
 import store from '../slice/index';
 import route from '../route';
 
 const RoutePrivate = ({ children }) => {
   const auth = useAuth();
-
   return auth.logIn ? children : auth.logOut;
 };
 
@@ -27,7 +25,6 @@ const App = () => (
       <AuthProvider>
         <div className="d-flex flex-column h-100">
           <AuthNavbar />
-
           <Routes>
             <Route path={route.chat} element={<RoutePrivate><Chat /></RoutePrivate>} />
             <Route path={route.logIn} element={<Login />} />

@@ -13,7 +13,6 @@ import useAuth from '../hooks/useAuth';
 const Registration = () => {
   const { t } = useTranslation();
   const auth = useAuth();
-
   const notifyNetwork = () => toast.error(t('errorLoadingData'));
   const notifyServer = () => toast.error(t('serverError'));
 
@@ -70,6 +69,7 @@ const Registration = () => {
         });
     },
   });
+
   return (
     <div className="container-fluid h-100">
       <div className="row justify-content-center align-content-center h-100">

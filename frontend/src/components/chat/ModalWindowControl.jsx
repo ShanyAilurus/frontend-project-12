@@ -10,11 +10,9 @@ import { actions as channelsActions } from '../../slice/channelsSlice';
 const ModalWindowControl = ({ showModal }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-
   const channels = useSelector((state) => state.channelsReducer.channels) || [];
   const channelIdActive = useSelector((state) => state.channelsReducer.channelId);
 
-  // eslint-disable-next-line no-shadow
   const setChannelIdAction = (id) => {
     dispatch(channelsActions.setChannelId(id));
   };
