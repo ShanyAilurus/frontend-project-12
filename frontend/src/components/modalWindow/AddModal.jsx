@@ -104,7 +104,7 @@ const AddChannelModal = () => {
             variant="primary"
             disabled={isSubmitting}
           >
-            {t('send')}
+            {t('add')}
           </Button>
         </FormGroup>
       </Form>

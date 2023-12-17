@@ -138,6 +138,7 @@ const Registration = () => {
                 </div>
                 <Button
                   type="submit"
+                  disabled={isSubmitting}
                   className="w-100 mb-3 btn btn-outline-primary btn-light"
                   onClick={handleSubmit}
                 >

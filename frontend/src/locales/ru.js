@@ -40,6 +40,7 @@ export default {
     channelDeleted: 'Канал удалён',
     channelRenamed: 'Канал переименован',
     rename: 'Переименовать',
+    add: 'Добавить',
     moreCharacters: 'Не менее 6 символов',
     plus: '+',
     errorLoadingData: 'Ошибка в загрузке данных',
