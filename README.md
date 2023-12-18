@@ -30,4 +30,4 @@
 - запустить приложение командой npm run start в корне проекта (бекенд)
 - открыть приложение в браузере по адресу http://localhost:5001
 
-Демонстрационное приложение: https://frontend-project-12-c8h1.onrender.com
+Демонстрационное приложение: https://frontend-project-12-i90w.onrender.com
