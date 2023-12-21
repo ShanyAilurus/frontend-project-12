@@ -13,13 +13,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import useSocket from '../../hooks/useSocket';
 import { actions as channelsActions } from '../../slice/channelsSlice';
 import { actions as modalsActions } from '../../slice/modalsSlice';
+import getChannels from '../../selectors/channels.js';
 
 const AddChannelModal = () => {
   const socketChat = useSocket();
   const dispatch = useDispatch();
   const onHide = () => dispatch(modalsActions.closeModal());
   const { t } = useTranslation();
-  const channels = useSelector((state) => state.channelsReducer.channels);
+  const channels = useSelector(getChannels);
   const channelName = channels ? channels.map((i) => i.name) : [];
   const notify = () => toast.success(t('channelCreated'));
 

@@ -1,9 +1,10 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import getModal from './modalWindow/index';
+import getModalInfo from '../selectors/modalInfo.js';
 
 const Modal = () => {
-  const modalInfo = useSelector((state) => state.modalsReducer.setModalInfo);
+  const modalInfo = useSelector(getModalInfo);
   if (!modalInfo.type) {
     return null;
   }

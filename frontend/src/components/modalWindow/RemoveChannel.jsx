@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 import useSocket from '../../hooks/useSocket';
 import { actions as modalsActions } from '../../slice/modalsSlice';
+import getModalInfo from '../../selectors/modalInfo.js';
 
 const RemoveChannel = () => {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ const RemoveChannel = () => {
   const socketChat = useSocket();
   const dispatch = useDispatch();
   const onHide = () => dispatch(modalsActions.closeModal());
-  const modalInfo = useSelector((state) => state.modalsReducer.setModalInfo);
+  const modalInfo = useSelector(getModalInfo);
   const channelId = modalInfo.targetId;
 
   const {

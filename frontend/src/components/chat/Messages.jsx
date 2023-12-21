@@ -5,11 +5,14 @@ import { Button, Form } from 'react-bootstrap';
 import filterWords from 'leo-profanity';
 import FormMes from './FormMessage';
 import useSocket from '../../hooks/useSocket';
+import getChannels from '../../selectors/channels.js';
+import getChannelId from '../../selectors/channelsId.js';
+import getMessages from '../../selectors/messages.js';
 
 const Messages = () => {
-  const channels = useSelector((state) => state.channelsReducer.channels) || [];
-  const channelsId = useSelector((state) => state.channelsReducer.channelId);
-  const messages = useSelector((state) => state.messagesReducer.messages) || [];
+  const channels = useSelector(getChannels) || [];
+  const channelsId = useSelector(getChannelId);
+  const messages = useSelector(getMessages) || [];
   const [message, setMessage] = useState('');
   const { t } = useTranslation();
   const socketChat = useSocket();

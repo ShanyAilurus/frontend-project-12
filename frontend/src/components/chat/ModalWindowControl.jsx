@@ -6,12 +6,14 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import filterWords from 'leo-profanity';
 import { actions as channelsActions } from '../../slice/channelsSlice';
+import getChannels from '../../selectors/channels.js';
+import getChannelId from '../../selectors/channelsId.js';
 
 const ModalWindowControl = ({ showModal }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const channels = useSelector((state) => state.channelsReducer.channels) || [];
-  const channelIdActive = useSelector((state) => state.channelsReducer.channelId);
+  const channels = useSelector(getChannels) || [];
+  const channelIdActive = useSelector(getChannelId);
 
   const setChannelIdAction = (id) => {
     dispatch(channelsActions.setChannelId(id));

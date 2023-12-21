@@ -12,15 +12,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup';
 import useSocket from '../../hooks/useSocket';
 import { actions as modalsActions } from '../../slice/modalsSlice';
+import getModalInfo from '../../selectors/modalInfo.js';
+import getChannels from '../../selectors/channels.js';
 
 const RenameChannel = () => {
   const { t } = useTranslation();
   const socketChat = useSocket();
   const dispatch = useDispatch();
   const onHide = () => dispatch(modalsActions.closeModal());
-  const modalInfo = useSelector((state) => state.modalsReducer.setModalInfo);
+  const modalInfo = useSelector(getModalInfo);
   const channelId = modalInfo.targetId;
-  const channels = useSelector((state) => state.channelsReducer.channels);
+  const channels = useSelector(getChannels);
   const channelName = channels.map((i) => i.name);
   const notify = () => toast.success(t('channelRenamed'));
 
