@@ -35,4 +35,9 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+export const autorization = () => {
+  const tokenUser = JSON.parse(localStorage.getItem('userInfo')).token;
+  return tokenUser;
+};
+
 export default AuthProvider;

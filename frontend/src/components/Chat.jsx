@@ -8,6 +8,7 @@ import useAuth from '../hooks/useAuth';
 import route from '../route';
 import { actions as channelsActions } from '../slice/channelsSlice';
 import { actions as messagesActions } from '../slice/messagesSlice';
+import { autorization } from '../context/AuthProvider';
 
 const Chat = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Chat = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(route.dataPath(), {
-          headers: { Authorization: `Bearer ${JSON.parse(localStorage.getItem('userInfo')).token}` },
+          headers: { Authorization: `Bearer ${autorization()}` },
         });
         dispatch(channelsActions.setChannels(response.data.channels));
         dispatch(messagesActions.setMessages(response.data.messages));
