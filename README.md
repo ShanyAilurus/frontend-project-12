@@ -4,30 +4,27 @@
 
 # Chat App
 
-Учебный проект, в рамках которого разрабатывается сильно упрощённая версия чата Slack с использованием библиотек React, Redux, Redux toolkit.
-В чате участниуи могут зарегистрироваться, заходить как пользователь, писать сообщения, а так же создавать, переименовывать и удалять каналы.
-Имеется фильтр нецензурных слов.
-Уже есть один зарегистрирвоанный пользователь. Имя: admin, пароль: admin.
+The educational project involves developing a simplified version of the Slack chat using the React, Redux, and Redux toolkit libraries. In the chat, participants can register, log in as a user, send messages, and create, rename, and delete channels. There is also a filter for offensive words. There is already one registered user. Username: admin, password: admin.
 
-### Установка проекта:
+### Project installation:
 
-1. Склонировать репозиторий проекта
-2. Запустить команду make install (установит взе зависимости как для бекенда, так и для фронтенда)
-3. Произвести сборку фронтенд приложения
+1. Clone the project repository.
+2. Run the command "make insall" (will install all dependencies for both the backend and the frontend).
+3. Build the frontend application.
 
-### Запуск проекта:
+### Running the Project:
 
-#### В режиме разработки:
+#### In development mode:
 
-- запустить команду npm run start в корне проекта (бекенд)
-- запустить команду npm run start в директории frontend проекта (фронтенд)
-- открыть приложение в браузере по адресу http://localhost:3000
+- Run the command 'npm run start' in the project's root directory (backend).
+- Run the command 'npm run start' in the frontend project directory (frontend).
+- Open the application in a browser at http://localhost:3000.
 
-#### В продуктивном режиме:
+#### In production mode:
 
-предусловие - произвести сборку приложения командой npm run build в корне проекта
+Prerequisite - build the application using the command 'npm run build' in the project's root directory:
 
-- запустить приложение командой npm run start в корне проекта (бекенд)
-- открыть приложение в браузере по адресу http://localhost:5001
+- Start the application using the command 'npm run start' in the project's root directory (backend).
+- Open the application in a browser at http://localhost:5001
 
-Демонстрационное приложение: https://frontend-project-12-i90w.onrender.com
+Demonstration application: https://frontend-project-12-i90w.onrender.com
