@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 import useSocket from '../../hooks/useSocket';
 import { modalsActions, channelsActions } from '../../slices/index.js';
-import { selectCurrentId } from '../../slices/channelsSelectors.js';
+import { selectCurrentId, getModal } from '../../slices/channelsSelectors.js';
 
 const defaultChannel = 1;
 
@@ -15,7 +15,7 @@ const RemoveChannel = () => {
   const dispatch = useDispatch();
   const { emitRemoveChannel } = useSocket();
 
-  const { channelId, show } = useSelector((state) => state.modal);
+  const { channelId, show } = useSelector(getModal);
   const currentId = useSelector(selectCurrentId);
 
   const handleClose = () => dispatch(modalsActions.isClose());

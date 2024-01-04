@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import * as yup from 'yup';
 import useSocket from '../../hooks/useSocket';
-import { selectors } from '../../slices/channelsSelectors';
+import { selectors, getModal } from '../../slices/channelsSelectors';
 import { modalsActions } from '../../slices/index';
 
 const RenameChannel = () => {
@@ -17,7 +17,7 @@ const RenameChannel = () => {
   const inputRef = useRef(null);
   const { emitRenameChannel } = useSocket();
   const channels = useSelector(selectors.selectAll);
-  const { channelId, show } = useSelector((state) => state.modal);
+  const { channelId, show } = useSelector(getModal);
   const currentChannel = useSelector((state) => selectors.selectById(state, channelId));
 
   const channelNames = channels.map((channelName) => channelName.name);

@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import AddChannelModal from './AddModal';
 import RenameChannel from './RenameChannel';
 import RemoveChannel from './RemoveChannel';
+import { getModalType } from '../../slices/channelsSelectors';
 
 const modals = {
   adding: AddChannelModal,
@@ -10,7 +11,7 @@ const modals = {
 };
 
 const ShowModal = () => {
-  const type = useSelector((state) => state.modal.type);
+  const type = useSelector(getModalType);
 
   const ComponentModal = modals[type];
   return (

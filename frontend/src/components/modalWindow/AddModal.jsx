@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import useSocket from '../../hooks/useSocket';
-import { selectors } from '../../slices/channelsSelectors';
+import { selectors, getModal } from '../../slices/channelsSelectors';
 import { modalsActions } from '../../slices/index';
 
 const isProfanity = (value) => {
@@ -23,7 +23,7 @@ const AddChannelModal = () => {
   const dispatch = useDispatch();
   const channels = useSelector(selectors.selectAll);
   const channelsNames = channels.map((channelName) => channelName.name);
-  const { show } = useSelector((state) => state.modal);
+  const { show } = useSelector(getModal);
   const validSchema = yup.object().shape({
     name: yup
       .string()

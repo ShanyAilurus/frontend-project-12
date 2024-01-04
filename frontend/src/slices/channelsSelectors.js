@@ -9,6 +9,10 @@ export const selectCurrentId = (state) => state.channels.currentChannelId;
 
 export const channelState = (state) => state.channels;
 
+export const getModal = (state) => state.modal;
+
+export const getModalType = (state) => state.modal.type;
+
 export const selectCurrentChannelId = createSelector(
   channelState,
   (channel) => channel.currentChannelId,
