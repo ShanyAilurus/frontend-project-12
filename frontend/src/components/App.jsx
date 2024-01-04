@@ -1,42 +1,23 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
-import { Provider } from 'react-redux';
-import { ErrorBoundary } from '@rollbar/react';
-import AuthProvider from '../context/AuthProvider';
-import NotFound from './NotFound';
-import Login from './Login';
-import Chat from './Chat';
-import Registration from './Registration';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import NotFound from '../pages/NotFound';
+import Login from '../pages/Login';
+import Chat from '../pages/Chat';
+import Registration from '../pages/Registration';
 import AuthNavbar from './Navbar';
-import Modal from './Modal';
-import useAuth from '../hooks/useAuth';
-import store from '../slice/index';
-import route from '../route';
-
-const RoutePrivate = ({ children }) => {
-  const auth = useAuth();
-  return auth.logIn ? children : auth.logOut;
-};
+import routes from '../route';
 
 const App = () => (
-  <ErrorBoundary>
-    <Provider store={store}>
-      <AuthProvider>
-        <div className="d-flex flex-column h-100">
-          <AuthNavbar />
-          <Routes>
-            <Route path={route.chat} element={<RoutePrivate><Chat /></RoutePrivate>} />
-            <Route path={route.logIn} element={<Login />} />
-            <Route path={route.signup} element={<Registration />} />
-            <Route path={route.err} element={<NotFound />} />
-          </Routes>
-          <Modal />
-        </div>
-        <ToastContainer />
-      </AuthProvider>
-    </Provider>
-  </ErrorBoundary>
+  <BrowserRouter>
+    <Routes>
+      <Route path={routes.chat()} element={<AuthNavbar />}>
+        <Route index element={<Chat />} />
+        <Route path={routes.login()} element={<Login />} />
+        <Route path={routes.signUp()} element={<Registration />} />
+        <Route path={routes.err()} element={<NotFound />} />
+      </Route>
+    </Routes>
+  </BrowserRouter>
 );
 
 export default App;

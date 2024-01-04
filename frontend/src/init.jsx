@@ -1,55 +1,75 @@
 import i18next from 'i18next';
 import React from 'react';
+import { Provider } from 'react-redux';
+import { ToastContainer } from 'react-toastify';
 import { io } from 'socket.io-client';
-import filterWords from 'leo-profanity';
-import { BrowserRouter } from 'react-router-dom';
-import { initReactI18next } from 'react-i18next';
-import { Provider as RollbarProvider } from '@rollbar/react';
+import filter from 'leo-profanity';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
+import { Provider as ProviderRoll, ErrorBoundary } from '@rollbar/react';
 import App from './components/App';
-import resources from './locales';
-import SocketProvider from './context/SocketProvider';
+import resources from './locales/index';
+import SocketProvider from './contexts/SocketProvider';
 import rollbarConfig from './rollbarConfig';
-import { actions as channelsActions } from './slice/channelsSlice';
-import { actions as messagesActions } from './slice/messagesSlice';
-import slice from './slice/index';
+import { channelsActions, messagesActions } from './slices/index';
+import store from './slices/store';
+import AuthProvider from './contexts/AuthProvider';
 
 const init = async () => {
-  i18next
-    .use(initReactI18next)
-    .init({
-      resources,
-      fallbackLng: 'ru',
-    });
-
-  filterWords.add(filterWords.getDictionary('ru'));
-
   const socket = io();
+  const i18n = i18next.createInstance();
 
-  socket.on('newChannel', (payload) => {
-    slice.dispatch(channelsActions.addChannel(payload));
+  await i18n.use(initReactI18next).init({
+    fallbackLng: 'ru',
+    debug: true,
+    resources,
+    interpolation: {
+      escapeValue: false,
+    },
   });
 
-  socket.on('removeChannel', (payload) => {
-    slice.dispatch(channelsActions.removeChannel(payload));
+  filter.add(filter.getDictionary('en'));
+  filter.add(filter.getDictionary('ru'));
+
+  socket.on('newMessage', (message) => {
+    store.dispatch(messagesActions.addMessage(message));
   });
 
-  socket.on('renameChannel', (payload) => {
-    slice.dispatch(channelsActions.renameChannel(payload));
+  socket.on('newChannel', (channel) => {
+    store.dispatch(channelsActions.addChannel(channel));
   });
 
-  socket.on('newMessage', (payload) => {
-    slice.dispatch(messagesActions.addMessage(payload));
+  socket.on('removeChannel', ({ id }) => {
+    store.dispatch(channelsActions.deleteChannel(id));
+  });
+
+  socket.on('renameChannel', ({ id, name }) => {
+    store.dispatch(channelsActions.updateChannel({ id, changes: { name } }));
   });
 
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <RollbarProvider config={rollbarConfig}>
-          <SocketProvider socket={socket}>
-            <App />
-          </SocketProvider>
-        </RollbarProvider>
-      </BrowserRouter>
+      <ProviderRoll config={rollbarConfig}>
+        <ErrorBoundary>
+          <Provider store={store}>
+            <SocketProvider socket={socket}>
+              <AuthProvider>
+                <I18nextProvider i18n={i18n}>
+                  <App />
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    closeOnClick
+                    pauseOnHover
+                    draggable
+                    theme="light"
+                  />
+                </I18nextProvider>
+              </AuthProvider>
+            </SocketProvider>
+          </Provider>
+        </ErrorBoundary>
+      </ProviderRoll>
     </React.StrictMode>
   );
 };

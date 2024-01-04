@@ -21,11 +21,10 @@ export default {
     delete: 'Удалить',
     sure: 'Вы уверены?',
     renameChannel: 'Переименовать канал',
-    messagesCounter: {
-      messages_Nol: ' сообщений',
-      messages_one: ' сообщение',
-      messages_few: ' сообщения',
-      messages_many: ' сообщений',
+    counter: {
+      count_one: '{{count}} сообщение',
+      count_few: '{{count}} сообщения',
+      count_many: '{{count}} сообщений',
     },
     userName: 'Имя пользователя',
     obligatoryField: 'Обязательное поле',
@@ -50,5 +49,6 @@ export default {
     networkError: 'Ошибка сети',
     alreadyExists: 'Такой пользователь уже существует',
     serverError: 'ошибка сервера',
+    obsceneLexicon: 'Ненормативная лексика',
   },
 };
