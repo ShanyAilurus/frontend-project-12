@@ -5,8 +5,8 @@ import RemoveChannel from './RemoveChannel';
 
 const modals = {
   adding: AddChannelModal,
-  removing: RenameChannel,
-  renaming: RemoveChannel,
+  renaming: RenameChannel,
+  removing: RemoveChannel,
 };
 
 const ShowModal = () => {
