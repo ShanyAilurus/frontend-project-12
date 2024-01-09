@@ -27,7 +27,7 @@ const RemoveChannel = () => {
       if (channelId === currentId) {
         dispatch(channelsActions.setCurrentChannelId(defaultChannel));
       }
-      toast.success(t('delete'));
+      toast.success(t('channelDeleted'));
     } catch (error) {
       toast.error(t('networkError'));
     }

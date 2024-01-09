@@ -11,10 +11,10 @@ import useSocket from '../../hooks/useSocket';
 import { selectors, getModal } from '../../slices/channelsSelectors';
 import { modalsActions } from '../../slices/index';
 
-const isProfanity = (value) => {
-  const cleanValue = filter.clean(value);
-  return cleanValue !== value;
-};
+// const isProfanity = (value) => {
+//   const cleanValue = filter.clean(value);
+//   return cleanValue !== value;
+// };
 
 const AddChannelModal = () => {
   const { t } = useTranslation();
@@ -30,12 +30,12 @@ const AddChannelModal = () => {
       .required(t('obligatoryField'))
       .min(3, t('numberCharacters'))
       .max(20, t('numberCharacters'))
-      .notOneOf(channelsNames, t('mustUnique'))
-      .test(
-        'isProfanity',
-        t('obsceneLexicon'),
-        (value) => !isProfanity(value),
-      ),
+      .notOneOf(channelsNames, t('mustUnique')),
+    // .test(
+    //   'isProfanity',
+    //   t('obsceneLexicon'),
+    //   (value) => !isProfanity(value),
+    // ),
   });
 
   const handleClose = () => {

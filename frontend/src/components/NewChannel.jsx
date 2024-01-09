@@ -18,8 +18,8 @@ const NewChannel = ({
       <Button
         onClick={() => handleCurrentChannel(channel.id)}
         type="button"
-        className="w-100 rounded-0 text-start btn text-truncate"
-        variant={isCurrentChannel ? 'primary' : null}
+        className="w-100 rounded-0 text-start text-truncate"
+        variant={isCurrentChannel ? 'secondary' : null}
       >
         <span className="me-1">#</span>
         {channel.name}
