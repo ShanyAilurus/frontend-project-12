@@ -13,5 +13,8 @@ start-backend:
 deploy:
 	npm ci && cd ./frontend && npm ci && npm run build:deploy
 
+build:
+	npm run build
+
 start:
 	npm run start
